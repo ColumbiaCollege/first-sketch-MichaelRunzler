@@ -43,7 +43,7 @@ void draw()
     
     default:
       // For all other buttons (middle, side, etc), "erase" by setting color to match the background
-      colors = BG_COLORS;
+      for(int i = 0; i < colors.length; i++) colors[i] = BG_COLORS[i];
     break;
   }
   
