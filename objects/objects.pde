@@ -43,6 +43,7 @@ float LABEL_TEXT_OFFSET = 0.5f;
 String LABEL_TEXT = "IBM";
 String LABEL_TEXT_2 = "\n\n160GB IDE\nCYL 480\nHEAD 12\nSEC 330,640\n(c) 2002 IBM Corp.\nAll rights reserved.";
 
+// RAM VARIABLES
 color RAM_CHIP_COLOR = color(48);
 color RAM_FINGER_COLOR = color(230, 220, 86);
 Point RAM_MODULE_DIMENSIONS = new Point(38, 9);
@@ -51,6 +52,7 @@ float RAM_CHIP_SIZE = 2.0f;
 
 void setup()
 {
+  // Set up background color and canvas size
   size(720, 720);
   background(BG_COLOR);
 }
@@ -59,10 +61,12 @@ void draw()
 {
   // Stop the draw loop from running continuously, since we don't need multi-layering.
   noLoop();
+  
   // Ensure shape modes
   rectMode(CORNER);
   ellipseMode(CENTER);
   
+  // Delegate to submethods for rendering operations
   motherboard();
   hdd();
   ram();
@@ -231,10 +235,26 @@ void motherboard()
   }
 }
 
+/**
+ * Returns a percentage (rounded down to the nearest pixel) of the width
+ * or height of the current canvas window.
+ * 
+ * @param widthOrHeight {@code true} for height measurement, {@code false} for width
+ * @param percentage the percentage (0-100, <b>NOT</b> 0-1) of the width or height to return
+ * @return the requested percentage of the width or height of the canvas
+ */
 int percentage(boolean widthOrHeight, float percentage){
   return (int)(widthOrHeight ? (width * (percentage / 100)) : (height * (percentage / 100)));
 }
 
+/**
+ * Returns the x,y centerpoint on the canvas in the horizontal and/or vertical
+ * axes, rounded down to the nearest pixel. Any axis that is not centered will be 0.
+ * 
+ * @param horizontal set to {@code true} if you wish to center horizontally
+ * @param vertical set to {@code true} if you wish to center vertically
+ * @return a Point object containing the centered x,y coordinates as requested
+ */
 Point getCenteredCoords(boolean horizontal, boolean vertical)
 {
   Point res = new Point(0,0);
@@ -245,6 +265,21 @@ Point getCenteredCoords(boolean horizontal, boolean vertical)
   return res;
 }
 
+/**
+ * Gets the pixel offset from the specified edges of the current canvas window.
+ * For example, the call {@code getOffsetCoords(-1, 40, -1, 45)} in a window with
+ * a height of 700 and width of 480 would return a Point with values {@code x = 440, y = 655}.
+ * This is useful for ensuring that objects may be placed equal distances from the edge
+ * of the canvas, regardless of what side they are on. Values of -1 or lower are ignored,
+ * and where conflicting values (such as left and right) are both more than -1, the left-most one
+ * has priority. So, the call {@code getOffsetCoords(40, 50, 60, 70)} will only perform measurements
+ * from the <b>left</b> and <b>top</b>. 
+ * 
+ * @param left the desired distance (in pixels) from the left side of the canvas window
+ * @param right the desired distance (in pixels) from the right side of the canvas window
+ * @param top the desired distance (in pixels) from the top of the canvas window
+ * @param bottom the desired distance (in pixels) from the bottom of the canvas window
+ */
 Point getOffsetCoords(int left, int right, int top, int bottom)
 {
   Point res = new Point(0,0);
